@@ -1,0 +1,67 @@
+{
+  "skins": [
+    {
+      "id": 0,
+      "name": "pink default",
+      "cost": 0,
+      "iconPath": "assets/skins/PinkSkin.png",
+      "texturePath": "assets/models/T_Model_Pink_C.png"
+    },
+    {
+      "id": 1,
+      "name": "mermaid bliss",
+      "cost": 1000,
+      "iconPath": "assets/skins/BlueGreenSkin.png",
+      "texturePath": "assets/models/T_Model_BlueGreen_C.png"
+    },
+    {
+      "id": 2,
+      "name": "sunset dream",
+      "cost": 1000,
+      "iconPath": "assets/skins/OrangeYellowSkin.png",
+      "texturePath": "assets/models/T_Model_OrangeYellow_C.png"
+    },
+    {
+      "id": 3,
+      "name": "sunny lavender",
+      "cost": 1000,
+      "iconPath": "assets/skins/PurpleYellowSkin.png",
+      "texturePath": "assets/models/T_Model_PurpleYellow_C.png"
+    },
+    {
+      "id": 4,
+      "name": "watermelon sky",
+      "cost": 3000,
+      "iconPath": "assets/skins/WatermelonSkin.png",
+      "texturePath": "assets/models/T_Model_Watermelon_C.png"
+    },
+    {
+      "id": 5,
+      "name": "lime time",
+      "cost": 3000,
+      "iconPath": "assets/skins/LimeSkin.png",
+      "texturePath": "assets/models/T_Model_Lime_C.png"
+    },
+    {
+      "id": 6,
+      "name": "pineapple flip",
+      "cost": 3000,
+      "iconPath": "assets/skins/PineappleSkin.png",
+      "texturePath": "assets/models/T_Model_Pineapple_C.png"
+    },
+    {
+      "id": 7,
+      "name": "coco paradise",
+      "cost": 3000,
+      "iconPath": "assets/skins/CoconutSkin.png",
+      "texturePath": "assets/models/T_Model_Coconut_C.png"
+    }
+    {
+      "id": 8,
+      "name": "galaxy prime",
+      "cost": 5000,
+      "iconPath": "assets/skins/GalaxySkin.png",
+      "texturePath": "assets/models/T_Model_Galaxy_C.png"
+    }
+  ]
+}
