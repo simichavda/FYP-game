@@ -1,0 +1,4 @@
+<linker>
+ <assembly fullname="System.Reactive" preserve="all"/>
+ <assembly fullname="Websocket.Client" preserve="all"/>
+</linker>

@@ -1,5 +1,9 @@
-﻿using TMPro;
+﻿using Assets.Scripts;
+using Supabase.Gotrue.Exceptions;
+using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LoginManager : MonoBehaviour
 {
@@ -7,6 +11,7 @@ public class LoginManager : MonoBehaviour
 
     public TMP_InputField UsernameInputField;
     public TMP_InputField PasswordInputField;
+    public int sceneToLoad = 3;
 
     private void Awake()
     {
@@ -21,13 +26,27 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public void Login()
+    public async void Login()
     {
-        // Implement login logic here
         string username = UsernameInputField.text;
         string password = PasswordInputField.text;
 
-        Debug.Log("Test");
         Debug.Log($"Logging in with Username: {username} and Password: {password}");
+
+
+        await SupabaseManager.InitialiseAsync();
+
+        try
+        {
+            await SupabaseManager.SignInAsync(username, password);
+            Debug.Log("Login successful");
+            SceneManager.LoadScene(sceneToLoad);
+            // Load the next scene or perform any other action
+        }
+        catch (GotrueException ex)
+        {
+            Debug.LogError($"Login failed: {ex.Message}");
+            // Handle specific exceptions if needed
+        }
     }
 }
