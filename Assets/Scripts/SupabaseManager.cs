@@ -1,7 +1,12 @@
 ﻿using Supabase;
+using Supabase.Postgrest.Models;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using Supabase.Postgrest.Models;
+using Supabase.Postgrest.Attributes;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
@@ -83,5 +88,112 @@ namespace Assets.Scripts
                 throw;
             }
         }
+
+        public static async Task<List<SkinData>> GetSkinsAsync()
+        {
+            try
+            {
+                var skinsTable = await Client.From<SkinRecord>().Get();
+
+                List<SkinData> allSkins = new List<SkinData>();
+                foreach (var skin in skinsTable.Models)
+                {
+                    var skinData = new SkinData
+                    {
+                        DisplayName = skin.DisplayName,
+                        PreviewSprite = Resources.Load<Sprite>($"Textures/UI/skins/{skin.PreviewImage}"),
+                        MeshImage = Resources.Load<Texture2D>($"materials/{skin.MaterialName}"),
+                        Price = skin.Price
+                    };
+                    allSkins.Add(skinData);
+                }
+
+                return allSkins;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error fetching skins: {ex.Message}");
+                throw;
+            }
+        }
+
+        //get player id from supabase
+        public static string GetPlayerId()
+        {
+            try
+            {
+                var user = Client.Auth.CurrentUser;
+                if (user != null)
+                {
+                    return user.Id;
+                }
+                else
+                {
+                    Debug.LogError("User not found.");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error fetching player ID: {ex.Message}");
+                throw;
+            }
+        }
+
+        public static async Task<bool> DoesPlayerOwnSkin(string skinName)
+        {
+            try
+            {
+                var playerSkins = await Client.From<PlayerSkinRecord>().Get();
+                foreach (var skin in playerSkins.Models)
+                {
+                    if (skin.Skin == skinName && skin.PlayerId == GetPlayerId())
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error checking if player owns skin: {ex.Message}");
+                throw;
+            }
+        }
+
     }
+
+    
+
+
+
+    [Table("skins")]
+    public class SkinRecord : BaseModel
+    {
+        // If you don’t have an integer “id” column,
+        // you can treat displayName as your PK:
+        [PrimaryKey("displayName")]
+        public string DisplayName { get; set; }
+
+        [Column("previewImage")]
+        public string PreviewImage { get; set; }
+
+        [Column("materialName")]
+        public string MaterialName { get; set; }
+
+        [Column("price")]
+        public int Price { get; set; }
+    }
+
+    [Table("playerSkins")]
+    public class PlayerSkinRecord : BaseModel
+    {
+        [PrimaryKey("player_id", true)]
+        public string PlayerId { get; set; } = null!;
+
+
+        [PrimaryKey("skin", true)]
+        public string Skin { get; set; } = null!;
+    }
+
 }
