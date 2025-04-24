@@ -1376,10 +1376,10 @@ MonoBehaviour:
   m_Padding:
     m_Left: 20
     m_Right: 10
-    m_Top: 210
+    m_Top: 70
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 20
+  m_Spacing: 10
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0

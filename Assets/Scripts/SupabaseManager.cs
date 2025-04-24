@@ -95,18 +95,22 @@ namespace Assets.Scripts
             {
                 var skinsTable = await Client.From<SkinRecord>().Get();
 
+
                 List<SkinData> allSkins = new List<SkinData>();
                 foreach (var skin in skinsTable.Models)
                 {
                     var skinData = new SkinData
                     {
                         DisplayName = skin.DisplayName,
-                        PreviewSprite = Resources.Load<Sprite>($"Textures/UI/skins/{skin.PreviewImage}"),
+                        PreviewSprite = Resources.Load<Sprite>($"skins/{skin.PreviewImage}"),
                         MeshImage = Resources.Load<Texture2D>($"materials/{skin.MaterialName}"),
                         Price = skin.Price
                     };
+                    Debug.Log($"Loaded skin: {skinData.DisplayName} with image: {skinData.PreviewSprite.name}");
                     allSkins.Add(skinData);
                 }
+
+                allSkins.Sort((x, y) => x.DisplayName == "pink default" ? -1 : 1);
 
                 return allSkins;
             }
@@ -161,7 +165,37 @@ namespace Assets.Scripts
             }
         }
 
+        //get active skin from supabase
+        public static async Task<string> GetActiveSkin()
+        {
+            try
+            {
+                var playerStats = await Client.From<playerStatsRecord>().Get();
+                foreach (var playerStat in playerStats.Models)
+                {
+                    if (playerStat.PlayerId == GetPlayerId())
+                    {
+                        var skinsTable = await Client.From<SkinRecord>().Get();
+                        foreach (var skinRecord in skinsTable.Models)
+                        {
+                            if (skinRecord.DisplayName == playerStat.ActiveSkin)
+                            {
+                                return skinRecord.MaterialName;
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error fetching active skin: {ex.Message}");
+                throw;
+            }
+        }   
+
     }
+
 
     
 
@@ -196,4 +230,16 @@ namespace Assets.Scripts
         public string Skin { get; set; } = null!;
     }
 
+    [Table("playerStats")]
+    public class playerStatsRecord : BaseModel
+    {
+        [PrimaryKey("player_id", true)]
+        public string PlayerId { get; set; } = null!;
+
+        [Column("points")]
+        public int Price { get; set; }
+
+        [PrimaryKey("activeSkin", true)]
+        public string ActiveSkin { get; set; } = null!;
+    }
 }

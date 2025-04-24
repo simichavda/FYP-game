@@ -810,6 +810,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 227341098}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 624396ca262123048b705a4380a8664a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 227341102}
   m_SourcePrefab: {fileID: 100100000, guid: 624396ca262123048b705a4380a8664a, type: 3}
 --- !u!4 &227341096 stripped
 Transform:
@@ -853,6 +857,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7760043eea2cd452ba7117f2c97e0038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!23 &227341100 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 624396ca262123048b705a4380a8664a,
+    type: 3}
+  m_PrefabInstance: {fileID: 227341095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &227341102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227341097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d01a0694a821f4ebba95c020e94c1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetRenderer: {fileID: 227341100}
 --- !u!1 &234536078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,7 +1194,7 @@ PrefabInstance:
     - target: {fileID: 114658503893516242, guid: 35ce2bb4caba9434db5e656796b632b1,
         type: 3}
       propertyPath: '_latitudeLongitude.Array.data[0]'
-      value: 52.956408, -1.158285
+      value: 52.95811, -1.154903
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

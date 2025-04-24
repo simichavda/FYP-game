@@ -10,6 +10,7 @@ public class ShopItemUI : MonoBehaviour
     [SerializeField] TMP_Text nameText;
     [SerializeField] TMP_Text priceText;
     [SerializeField] Button buyButton;
+    [SerializeField] GameObject pointsContainer;
 
     private SkinData _data;
 
@@ -26,11 +27,18 @@ public class ShopItemUI : MonoBehaviour
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(onBuyClicked);
 
+
+
         // Ask Supabase if player already owns this skin and other stuff
         if (await SupabaseManager.DoesPlayerOwnSkin(data.DisplayName))
         {
-            priceText.gameObject.SetActive(false);
-            buyButton.GetComponentInChildren<TMP_Text>().text = "Equip";
+            buyButton.GetComponentInChildren<TMP_Text>().text = "equip";
+            pointsContainer.SetActive(false);
+        }
+        else 
+        {
+            buyButton.gameObject.SetActive(false);
+            pointsContainer.SetActive(true);
         }
     }
 
