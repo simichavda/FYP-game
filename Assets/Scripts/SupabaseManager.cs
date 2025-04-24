@@ -110,7 +110,7 @@ namespace Assets.Scripts
                     allSkins.Add(skinData);
                 }
 
-                allSkins.Sort((x, y) => x.DisplayName == "pink default" ? -1 : 1);
+                allSkins.Sort((x, y) => x.Price.CompareTo(y.Price));
 
                 return allSkins;
             }
