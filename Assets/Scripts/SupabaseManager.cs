@@ -93,6 +93,7 @@ namespace Assets.Scripts
         {
             try
             {
+                Debug.Log("Fetching skins from Supabase...");
                 var skinsTable = await Client.From<SkinRecord>().Get();
 
 
