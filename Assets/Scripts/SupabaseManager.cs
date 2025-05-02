@@ -3,9 +3,7 @@ using Supabase.Postgrest.Models;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
-using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Attributes;
-using NUnit.Framework;
 using System.Collections.Generic;
 
 namespace Assets.Scripts
@@ -91,11 +89,13 @@ namespace Assets.Scripts
 
         public static async Task<List<SkinData>> GetSkinsAsync()
         {
+            // Goes through each skin in skins table (as above) but also check if player owns it (playerStats.activeSkin) or just has it purchased (playerSkins):
             try
             {
                 Debug.Log("Fetching skins from Supabase...");
                 var skinsTable = await Client.From<SkinRecord>().Get();
-
+                var playerSkins = await Client.From<PlayerSkinRecord>().Get();
+                var playerStats = await Client.From<playerStatsRecord>().Get();
 
                 List<SkinData> allSkins = new List<SkinData>();
                 foreach (var skin in skinsTable.Models)
@@ -105,8 +105,30 @@ namespace Assets.Scripts
                         DisplayName = skin.DisplayName,
                         PreviewSprite = Resources.Load<Sprite>($"skins/{skin.PreviewImage}"),
                         MeshTexture = Resources.Load<Texture2D>($"textures/{skin.MaterialName}"),
-                        Price = skin.Price
+                        Price = skin.Price,
+                        Status = SkinStatus.Locked // Default to locked
                     };
+
+                    // Check if the player owns this skin
+                    foreach (var playerSkin in playerSkins.Models)
+                    {
+                        if (playerSkin.Skin == skin.DisplayName && playerSkin.PlayerId == GetPlayerId())
+                        {
+                            skinData.Status = SkinStatus.Purchased;
+                            break;
+                        }
+                    }
+
+                    // Check if the player has this skin equipped
+                    foreach (var playerStat in playerStats.Models)
+                    {
+                        if (playerStat.ActiveSkin == skin.DisplayName && playerStat.PlayerId == GetPlayerId())
+                        {
+                            skinData.Status = SkinStatus.Equipped;
+                            break;
+                        }
+                    }
+
                     Debug.Log($"Loaded skin: {skinData.DisplayName} with image: {skinData.PreviewSprite.name}");
                     allSkins.Add(skinData);
                 }
@@ -186,7 +208,8 @@ namespace Assets.Scripts
                                     DisplayName = skinRecord.DisplayName,
                                     PreviewSprite = Resources.Load<Sprite>($"skins/{skinRecord.PreviewImage}"),
                                     MeshTexture = Resources.Load<Texture2D>($"textures/{skinRecord.MaterialName}"),
-                                    Price = skinRecord.Price
+                                    Price = skinRecord.Price,
+                                    Status = SkinStatus.Equipped
                                 };
                             }
                         }
@@ -197,6 +220,64 @@ namespace Assets.Scripts
             catch (Exception ex)
             {
                 Debug.LogError($"Error fetching active skin: {ex.Message}");
+                throw;
+            }
+        }
+
+        // add skin to playerSkins (just purchased)
+        public static async Task<bool> AddSkin(SkinData skin)
+        {
+            try
+            {
+                var playerId = GetPlayerId();
+                var skinName = skin.DisplayName;
+                var playerSkins = await Client.From<PlayerSkinRecord>().Get();
+                foreach (var playerSkin in playerSkins.Models)
+                {
+                    if (playerSkin.PlayerId == playerId && playerSkin.Skin == skinName)
+                    {
+                        Debug.Log($"Player already owns skin: {skinName}");
+                        return false; // Skin already owned
+                    }
+                }
+
+                var newPlayerSkin = new PlayerSkinRecord
+                {
+                    PlayerId = playerId,
+                    Skin = skinName
+                };
+
+                await Client.From<PlayerSkinRecord>().Insert(newPlayerSkin);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error adding skin: {ex.Message}");
+                throw;
+            }
+        }
+
+        // mark skin as equipped in playerStats
+        public static async Task<bool> EquipSkin(string skinName)
+        {
+            try
+            {
+                var playerStats = await Client.From<playerStatsRecord>().Get();
+                foreach (var playerStat in playerStats.Models)
+                {
+                    if (playerStat.PlayerId == GetPlayerId())
+                    {
+                        playerStat.ActiveSkin = skinName;
+                        await Client.From<playerStatsRecord>().Update(playerStat);
+                        Debug.Log($"Supabase: Skin {skinName} equipped for player {playerStat.PlayerId}");
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error equipping skin: {ex.Message}");
                 throw;
             }
         }
@@ -339,7 +420,7 @@ namespace Assets.Scripts
         [Column("points")]
         public int Points { get; set; }
 
-        [PrimaryKey("activeSkin", true)]
+        [Column("activeSkin")]
         public string ActiveSkin { get; set; } = null!;
     }
 }

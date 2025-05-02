@@ -1,5 +1,6 @@
 using Assets.Scripts;
 using TMPro;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,40 +18,56 @@ public class ShopItemUI : MonoBehaviour
     /// <summary>
     /// Initialize this UI with the data for a single skin.
     /// </summary>
-    public async void Setup(SkinData data, UnityEngine.Events.UnityAction onBuyClicked)
+    public void Setup(SkinData data, UnityEngine.Events.UnityAction onBuyClicked)
     {
         _data = data;
-        previewImage.sprite = data.PreviewSprite;
-        nameText.text = data.DisplayName;
-        priceText.text = data.Price.ToString();
+        previewImage.sprite = _data.PreviewSprite;
+        nameText.text = _data.DisplayName;
+        priceText.text = _data.Price.ToString();
 
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(onBuyClicked);
 
+        UpdateUI();
 
+    }
 
-        // Ask Supabase if player already owns this skin and other stuff
-        if (await SupabaseManager.DoesPlayerOwnSkin(data.DisplayName))
+    // Can afford, show button with "buy"
+    // Can't afford, show cost and hide button
+    // Owns, show button with "equip"
+    // Eqipped, show button with "equipped"
+
+    private void UpdateUI()
+    {
+        switch (_data.Status)
         {
-            buyButton.GetComponentInChildren<TMP_Text>().text = "equip";
-            pointsContainer.SetActive(false);
-        }
-        else 
-        {
-            buyButton.gameObject.SetActive(false);
-            pointsContainer.SetActive(true);
+            case SkinStatus.Purchased:
+                buyButton.GetComponentInChildren<TMP_Text>().text = "Equip";
+                pointsContainer.SetActive(false);
+                break;
+            case SkinStatus.Equipped:
+                buyButton.gameObject.SetActive(false);
+                buyButton.GetComponentInChildren<TMP_Text>().text = "Equipped";
+                pointsContainer.SetActive(false);
+                break;
+            case SkinStatus.Locked:
+                if(PointsManager.Instance.GetCurrentPoints() >= _data.Price)
+                {
+                    buyButton.GetComponentInChildren<TMP_Text>().text = "Buy";
+                    pointsContainer.SetActive(false);
+                }
+                else
+                {
+                    buyButton.gameObject.SetActive(false);
+                    pointsContainer.SetActive(true);
+                }
+                break;
         }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void UpdateStatus(SkinStatus status)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        _data.Status = status;
+        UpdateUI();
     }
 }

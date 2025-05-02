@@ -9,12 +9,12 @@ public class PlayerSkinApplier : MonoBehaviour
     [Header("References")]
     [SerializeField] private Renderer targetRenderer; // Assign your 3D model's renderer
 
-    private async void Start()
+    private void Start()
     {
         LoadAndApplySkin();
     }
 
-    private async void LoadAndApplySkin()
+    private void LoadAndApplySkin()
     {
         // Get active skin from Supabase
         SkinData activeSkin = InventoryManager.Instance.GetSelectedSkin();

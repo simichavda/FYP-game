@@ -903,14 +903,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 6
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 7
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 7
   m_RegexValue: 
   m_GlobalPointSize: 14
   m_CharacterLimit: 0
@@ -1081,8 +1081,8 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -1203,6 +1203,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EmailInputField: {fileID: 205430713}
   PasswordInputField: {fileID: 242009436}
+  PasswordConfirmInputField: {fileID: 314602933}
+  ErrorPopupPrefab: {fileID: 7005483259895767023, guid: 3d90cbb845d8d1b45a6d63530a18e4c3,
+    type: 3}
   sceneToLoad: 3
 --- !u!4 &302314058
 Transform:
@@ -1232,7 +1235,7 @@ GameObject:
   - component: {fileID: 314602934}
   - component: {fileID: 314602933}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: passwordAgainInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1306,8 +1309,8 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0

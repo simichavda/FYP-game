@@ -59,7 +59,8 @@ public class WaypointManager : MonoBehaviour
     {
         if (actor == null || waypointPrefab == null) return;
 
-        Vector3 randomDirection = Random.insideUnitSphere * spawnRadius;
+        // Generate a random position within the spawn radius
+        Vector3 randomDirection = Random.insideUnitSphere * (Mathf.Max(spawnRadius, 80f)); 
         Vector3 spawnPosition = actor.position + randomDirection;
         spawnPosition.y = 0; // Ensure the waypoint spawns at ground level
 
@@ -85,21 +86,14 @@ public class WaypointManager : MonoBehaviour
             activeWaypoints.Remove(collectedWaypoint);
             Debug.Log($"Waypoint collected. Remaining: {activeWaypoints.Count}");
 
-            // --- Add collection logic here ---
-            // Example: Increase score, play sound, update UI
-            // int points = waypointScript.pointValue; // If using component check and pointValue
-            // ScoreManager.Instance.AddScore(points);
-            // AudioManager.Instance.PlaySound("WaypointCollect");
-            // ---------------------------------
-
             if (PointsManager.Instance == null)
             {
                 Debug.LogError("PointsManager instance not found.");
                 return;
             }
 
-            // Grab the PointsManager and add points
-            PointsManager.Instance.AddPoints(1); // Assuming each waypoint gives 1 point
+            // Grab the PointsManager and add points (random between 20 and 100)
+            PointsManager.Instance.AddPoints(Random.Range(20, 100));
         }
         else
         {

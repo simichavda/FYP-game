@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts;
 using Supabase.Gotrue.Exceptions;
 using System;
+using System.Text.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,12 +43,11 @@ public class LoginManager : MonoBehaviour
             Debug.Log("Login successful");
 
             SceneManager.LoadScene(sceneToLoad);
-            // Load the next scene or perform any other action
         }
         catch (GotrueException ex)
         {
             Debug.LogError($"Login failed: {ex.Message}");
-            // Handle specific exceptions if needed
+            ErrorPopup.Show(ex);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using JetBrains.Annotations;
 
 [Serializable]
 public class SkinData
@@ -9,6 +10,15 @@ public class SkinData
     public Sprite PreviewSprite;
 	public Texture2D MeshTexture;
     public int Price;
+    public SkinStatus Status; // Purchased, equipped, locked
+}
+
+[Serializable]
+public enum SkinStatus
+{
+    Purchased,
+    Equipped,
+    Locked // Not purchased; can buy
 }
 
 [Serializable]

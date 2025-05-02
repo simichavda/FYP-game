@@ -26,6 +26,15 @@ public class PlayerManager : MonoBehaviour
         InventoryManager.Instance.OnSkinSelected += RefreshSkin;
     }
 
+    void OnDestroy()
+    {
+        // Unsubscribe from the event to prevent memory leaks
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.OnSkinSelected -= RefreshSkin;
+        }
+    }
+
     
     void OnTriggerEnter(Collider other)
     {
