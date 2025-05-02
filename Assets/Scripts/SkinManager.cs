@@ -2,6 +2,8 @@
 using Supabase;
 using Assets.Scripts;
 
+
+// CLASS NO LONGER USED //
 public class PlayerSkinApplier : MonoBehaviour
 {
     [Header("References")]
@@ -15,21 +17,15 @@ public class PlayerSkinApplier : MonoBehaviour
     private async void LoadAndApplySkin()
     {
         // Get active skin from Supabase
-        var activeSkin = await SupabaseManager.GetActiveSkin();
+        SkinData activeSkin = InventoryManager.Instance.GetSelectedSkin();
 
-        if (!string.IsNullOrEmpty(activeSkin))
+        if (activeSkin.MeshTexture == null)
         {
-            // Load texture from Resources
-            var skinTexture = Resources.Load<Texture>($"Textures/{activeSkin}");
-
-            if (skinTexture != null)
-            {
-                targetRenderer.material.mainTexture = skinTexture;
-            }
-            else
-            {
-                Debug.LogError($"Failed to load texture: {activeSkin}");
-            }
+            Debug.LogError("No active skin found!");
+            return;
         }
+
+        
+        targetRenderer.material.mainTexture = activeSkin.MeshTexture;
     }
 }

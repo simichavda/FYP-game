@@ -33,5 +33,7 @@ public class ShopManager : MonoBehaviour
     {
         Debug.Log($"Attempting to buy {skin.DisplayName} for {skin.Price} points");
         // TODO: Check player points, call your purchase logic, update Supabase, etc.
+
+        // When equipping a skin, do InventoryManager.SetSelectedSkin(skin);
     }
 }

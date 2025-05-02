@@ -21,9 +21,7 @@ public class PointsManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        LoadPoints();
-
-        
+        LoadPoints(); 
     }
 
     public int GetCurrentPoints()

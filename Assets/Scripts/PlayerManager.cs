@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -18,6 +19,11 @@ public class PlayerManager : MonoBehaviour
             Debug.LogError("PlayerCharacter could not find WaypointManager in the scene!");
             this.enabled = false;
         }
+
+        RefreshSkin();
+
+        // Subscribe to the event when the skin is changed
+        InventoryManager.Instance.OnSkinSelected += RefreshSkin;
     }
 
     
@@ -45,9 +51,31 @@ public class PlayerManager : MonoBehaviour
         Destroy(waypointObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RefreshSkin()
     {
-        
+        // Get the current skin from Supabase
+        Texture2D texture = InventoryManager.Instance.GetSelectedSkin().MeshTexture;
+
+
+        if (texture == null)
+        {
+            Debug.LogError("No active skin found!");
+            return;
+        }
+
+        // Apply the texture to the player character's material
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer.material != null)
+            {
+                renderer.material.mainTexture = texture;
+            }
+            else
+            {
+                Debug.LogError("Material not found on the renderer!");
+            }
+        }
+
     }
 }

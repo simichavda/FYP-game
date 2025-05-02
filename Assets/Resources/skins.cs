@@ -7,7 +7,7 @@ public class SkinData
 {
     public string DisplayName;
     public Sprite PreviewSprite;
-	public Texture2D MeshImage;
+	public Texture2D MeshTexture;
     public int Price;
 }
 

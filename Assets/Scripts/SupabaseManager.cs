@@ -104,7 +104,7 @@ namespace Assets.Scripts
                     {
                         DisplayName = skin.DisplayName,
                         PreviewSprite = Resources.Load<Sprite>($"skins/{skin.PreviewImage}"),
-                        MeshImage = Resources.Load<Texture2D>($"materials/{skin.MaterialName}"),
+                        MeshTexture = Resources.Load<Texture2D>($"textures/{skin.MaterialName}"),
                         Price = skin.Price
                     };
                     Debug.Log($"Loaded skin: {skinData.DisplayName} with image: {skinData.PreviewSprite.name}");
@@ -167,7 +167,7 @@ namespace Assets.Scripts
         }
 
         //get active skin from supabase
-        public static async Task<string> GetActiveSkin()
+        public static async Task<SkinData> GetActiveSkin()
         {
             try
             {
@@ -181,7 +181,13 @@ namespace Assets.Scripts
                         {
                             if (skinRecord.DisplayName == playerStat.ActiveSkin)
                             {
-                                return skinRecord.MaterialName;
+                                return new SkinData
+                                {
+                                    DisplayName = skinRecord.DisplayName,
+                                    PreviewSprite = Resources.Load<Sprite>($"skins/{skinRecord.PreviewImage}"),
+                                    MeshTexture = Resources.Load<Texture2D>($"textures/{skinRecord.MaterialName}"),
+                                    Price = skinRecord.Price
+                                };
                             }
                         }
                     }
