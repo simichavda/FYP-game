@@ -193,8 +193,101 @@ namespace Assets.Scripts
                 Debug.LogError($"Error fetching active skin: {ex.Message}");
                 throw;
             }
-        }   
+        }
 
+
+        public static async Task<int> getPoints()
+        {
+            try
+            {
+                var playerStats = await Client.From<playerStatsRecord>().Get();
+                foreach (var playerStat in playerStats.Models)
+                {
+                    if (playerStat.PlayerId == GetPlayerId())
+                    {
+                        return playerStat.Points;
+                    }
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error fetching player points: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Add points
+        public static async Task<bool> AddPoints(string playerId, int points)
+        {
+            try
+            {
+                var playerStats = await Client.From<playerStatsRecord>().Get();
+                foreach (var playerStat in playerStats.Models)
+                {
+                    if (playerStat.PlayerId == playerId)
+                    {
+                        playerStat.Points += points;
+                        await Client.From<playerStatsRecord>().Update(playerStat);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error adding points: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Remove points
+        public static async Task<bool> RemovePoints(string playerId, int points)
+        {
+            try
+            {
+                var playerStats = await Client.From<playerStatsRecord>().Get();
+                foreach (var playerStat in playerStats.Models)
+                {
+                    if (playerStat.PlayerId == playerId)
+                    {
+                        playerStat.Points -= points;
+                        await Client.From<playerStatsRecord>().Update(playerStat);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error removing points: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Set points
+        public static async Task<bool> setPoints(int points)
+        {
+            try
+            {
+                var playerStats = await Client.From<playerStatsRecord>().Get();
+                foreach (var playerStat in playerStats.Models)
+                {
+                    if (playerStat.PlayerId == GetPlayerId())
+                    {
+                        playerStat.Points = points;
+                        await Client.From<playerStatsRecord>().Update(playerStat);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error setting points: {ex.Message}");
+                throw;
+            }
+        }
     }
 
 
@@ -238,7 +331,7 @@ namespace Assets.Scripts
         public string PlayerId { get; set; } = null!;
 
         [Column("points")]
-        public int Price { get; set; }
+        public int Points { get; set; }
 
         [PrimaryKey("activeSkin", true)]
         public string ActiveSkin { get; set; } = null!;

@@ -40,6 +40,7 @@ public class LoginManager : MonoBehaviour
         {
             await SupabaseManager.SignInAsync(username, password);
             Debug.Log("Login successful");
+
             SceneManager.LoadScene(sceneToLoad);
             // Load the next scene or perform any other action
         }

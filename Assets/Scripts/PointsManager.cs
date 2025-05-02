@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts;
+using UnityEngine;
 
 public class PointsManager : MonoBehaviour
 {
@@ -19,6 +20,15 @@ public class PointsManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        LoadPoints();
+
+        
+    }
+
+    public int GetCurrentPoints()
+    {
+        return _currentPoints;
     }
 
     public void AddPoints(int amount)
@@ -28,15 +38,22 @@ public class PointsManager : MonoBehaviour
         SavePoints();
     }
 
-    private void SavePoints()
+    private async void SavePoints()
     {
         // Will implement with Supabase later
-        PlayerPrefs.SetInt("PlayerPoints", _currentPoints);
+        //PlayerPrefs.SetInt("PlayerPoints", _currentPoints);
+
+        // Save points to Supabase
+        await SupabaseManager.setPoints(_currentPoints);
     }
 
-    public void LoadPoints()
+    private async void LoadPoints()
     {
-        _currentPoints = PlayerPrefs.GetInt("PlayerPoints", 0);
+        //_currentPoints = PlayerPrefs.GetInt("PlayerPoints", 0);
+        //OnPointsUpdated?.Invoke(_currentPoints);
+
+        // Load points from Supabase
+        _currentPoints = await SupabaseManager.getPoints();
         OnPointsUpdated?.Invoke(_currentPoints);
     }
 }

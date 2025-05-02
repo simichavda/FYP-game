@@ -84,6 +84,22 @@ public class WaypointManager : MonoBehaviour
         {
             activeWaypoints.Remove(collectedWaypoint);
             Debug.Log($"Waypoint collected. Remaining: {activeWaypoints.Count}");
+
+            // --- Add collection logic here ---
+            // Example: Increase score, play sound, update UI
+            // int points = waypointScript.pointValue; // If using component check and pointValue
+            // ScoreManager.Instance.AddScore(points);
+            // AudioManager.Instance.PlaySound("WaypointCollect");
+            // ---------------------------------
+
+            if (PointsManager.Instance == null)
+            {
+                Debug.LogError("PointsManager instance not found.");
+                return;
+            }
+
+            // Grab the PointsManager and add points
+            PointsManager.Instance.AddPoints(1); // Assuming each waypoint gives 1 point
         }
         else
         {

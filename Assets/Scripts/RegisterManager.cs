@@ -21,6 +21,7 @@ public class RegisterManager : MonoBehaviour
         {
             await SupabaseManager.SignUpAsync(email, password);
             Debug.Log("Registration successful");
+
             SceneManager.LoadScene(sceneToLoad);
         }
         catch (GotrueException ex)
